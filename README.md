@@ -2,7 +2,10 @@
 # Ansible role: `Secure Remote Docker daemon using SSL`
 
 ## Requirements
+#Master
+ansible V2.10.9
 
+#Node
 No requirements. The role will install Docker before setting it up.
 
 ## Role Variables
