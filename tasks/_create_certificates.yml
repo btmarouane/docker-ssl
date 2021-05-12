@@ -37,6 +37,9 @@
     digest: sha256
     path: "{{certdir}}/server.csr"
     subject_alt_name: "IP:{{d_host}},IP:127.0.0.1"
+    extendedKeyUsage: 'serverAuth'
+    subject:
+      - 'CN: ansible1'
     mode: 0644
     owner: ansible
     group: ansible
