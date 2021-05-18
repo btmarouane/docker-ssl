@@ -1,3 +1,17 @@
+- name: 'Check host DNS presence'
+  assert:
+    that:
+      - host_dns is defined
+    fail_msg: "host_dns needs to be set for the role to work "
+    success_msg: "Required variable host_dns is defined"
+
+- name: 'Check host address presence'
+  assert:
+    that:
+      - host_addr is defined
+    fail_msg: "host_addr needs to be set for the role to work "
+    success_msg: "Required variable host_addr is defined"
+
 - name: Create General Certificates directory for both control and target
   delegate_to: "{{item}}"
   with_items:
@@ -51,10 +65,10 @@
     privatekey_path: "{{certdir}}/server-key.pem"
     digest: sha256
     path: "{{certdir}}/server.csr"
-    subject_alt_name: "DNS:production,IP:{{d_host}},IP:127.0.0.1"
+    subject_alt_name: "DNS:{{host_dns}},IP:{{host_addr}},IP:127.0.0.1"
     extendedKeyUsage: 'serverAuth'
     subject:
-      CN: production
+      CN: "{{host_dns}}"
     mode: 0400
     owner: ansible
     group: ansible
