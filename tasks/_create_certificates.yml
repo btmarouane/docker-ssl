@@ -13,7 +13,6 @@
     success_msg: "Required variable host_addr is defined"
 
 - name: Create General Certificates directory for both control and target
-
   delegate_to: "{{item}}"
   with_items:
     - localhost
@@ -25,7 +24,6 @@
     state: directory
 
 - name: Create temp directory for both control and target
-
   delegate_to: "{{item}}"
   with_items:
     - localhost
@@ -49,15 +47,17 @@
     owner: ansible
     group: ansible
 
+
+
 - name: Create passphrase file
-    delegate_to: "{{item}}"
-    with_items:
-      - localhost
-      - production
-    copy:
-      dest: "{{passphrase_file}}"
-      content: |
-        {{passphrase}}
+  delegate_to: "{{item}}"
+  with_items:
+    - localhost
+    - production
+  copy:
+    dest: "{{passphrase_file}}"
+    content: |
+      {{passphrase}}
 
 - name: Generate CA
   connection: local
