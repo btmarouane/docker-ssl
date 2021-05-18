@@ -46,7 +46,7 @@
 - name: Generate CA private key
   connection: local
   delegate_to: localhost
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     passphrase: "{{passphrase}}"
     cipher: aes256
     size: 4096
@@ -73,7 +73,7 @@
     - ca-key.pem
 
 - name: Generate server private key
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     size: 4096
     path: "{{certdir}}/server-key.pem"
     mode: 0400
@@ -115,7 +115,7 @@
 - name: Generate client key
   connection: local
   delegate_to: localhost
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     size: 4096
     path: "{{certdir}}/key.pem"
     mode: 0400
