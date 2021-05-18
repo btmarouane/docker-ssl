@@ -12,6 +12,14 @@
     fail_msg: "host_addr needs to be set for the role to work "
     success_msg: "Required variable host_addr is defined"
 
+- name: 'Check passphrase presence'
+  assert:
+    that:
+      - passphrase is defined
+    fail_msg: "passphrase needs to be set for the role to work "
+    success_msg: "Required variable passphrase is defined"
+
+
 - name: Create General Certificates directory for both control and target
   delegate_to: "{{item}}"
   with_items:
