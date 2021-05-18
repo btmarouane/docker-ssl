@@ -1,17 +1,15 @@
-- name: "install requirements"
+- name: Install {{item}}
+  package:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - python3
+    - pyOpenSSL
+    - libselinux-python3
   vars:
-  - ansible_python_interpreter: /usr/bin/python2
-  tasks:
-  - name: Install {{item}}
-    package:
-      name: "{{item}}"
-      state: present
-    with_items:
-      - python3
-      - pyOpenSSL
-      - libselinux-python3
-  - name: Install docker
-    block:
+    - ansible_python_interpreter: /usr/bin/python2
+- name: Install docker
+  block:
     - name: Install yum-utils
       package:
         name: yum-utils
@@ -34,3 +32,5 @@
           package:
             name: containerd.io
             state: present
+  vars:
+    - ansible_python_interpreter: /usr/bin/python2
