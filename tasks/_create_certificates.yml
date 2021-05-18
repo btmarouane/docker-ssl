@@ -16,7 +16,7 @@
   delegate_to: "{{item}}"
   with_items:
     - localhost
-    - {{host_dns}}
+    - "{{host_dns}}"
   file:
     path: "{{certdir}}"
     owner: ansible
@@ -27,7 +27,7 @@
   delegate_to: "{{item}}"
   with_items:
     - localhost
-    - {{host_dns}}
+    - "{{host_dns}}"
   file:
     path: "{{certdir}}/temp"
     owner: ansible
@@ -38,7 +38,7 @@
   delegate_to: "{{item}}"
   with_items:
     - localhost
-    - {{host_dns}}
+    - "{{host_dns}}"
   copy:
     dest: "{{passphrase_file}}"
     content: "{{passphrase}}"
