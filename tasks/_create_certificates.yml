@@ -16,7 +16,7 @@
   delegate_to: "{{item}}"
   with_items:
     - localhost
-    - production
+    - {{host_dns}}
   file:
     path: "{{certdir}}"
     owner: ansible
@@ -27,7 +27,7 @@
   delegate_to: "{{item}}"
   with_items:
     - localhost
-    - production
+    - {{host_dns}}
   file:
     path: "{{certdir}}/temp"
     owner: ansible
@@ -38,7 +38,7 @@
   delegate_to: "{{item}}"
   with_items:
     - localhost
-    - production
+    - {{host_dns}}
   copy:
     dest: "{{passphrase_file}}"
     content: "{{passphrase}}"
@@ -102,7 +102,7 @@
 - name: Sign server csr with CA key
   connection: local
   delegate_to: localhost
-  openssl_certificate:
+  community.crypto.x509_certificate:
     path: "{{certdir}}/server-cert.pem"
     ownca_privatekey_path: "{{certdir}}/ca-key.pem"
     csr_path: "{{certdir}}/server.csr"
@@ -138,7 +138,7 @@
 - name: Sign client csr with CA key
   connection: local
   delegate_to: localhost
-  openssl_certificate:
+  community.crypto.x509_certificate:
     path: "{{certdir}}/cert.pem"
     ownca_privatekey_path: "{{certdir}}/ca-key.pem"
     csr_path: "{{certdir}}/client.csr"
