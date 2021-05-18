@@ -13,6 +13,7 @@
     success_msg: "Required variable host_addr is defined"
 
 - name: Create General Certificates directory for both control and target
+
   delegate_to: "{{item}}"
   with_items:
     - localhost
@@ -22,10 +23,10 @@
     owner: ansible
     group: ansible
     state: directory
-  become: yes
+  become: no
 
 - name: Generate CA private key
-  connection: local
+  #connection: local
   delegate_to: localhost
   openssl_privatekey:
     cipher: aes256
@@ -36,12 +37,12 @@
     group: ansible
 
 - name: Generate CA
-  connection: local
+  #connection: local
   delegate_to: localhost
-  command: "openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out {{certdir}}/ca.pem"
+  command: "openssl req -new -x509 -days 365 -key {{certdir}}/ca-key.pem -sha256 -out {{certdir}}/ca.pem"
 
 - name: Set file permissions
-  connection: local
+  #connection: local
   delegate_to: localhost
   file:
     path: "{{ certdir }}/{{ item }}"
@@ -80,7 +81,7 @@
     flat: true
 
 - name: Sign server csr with CA key
-  connection: local
+  #connection: local
   delegate_to: localhost
   openssl_certificate:
     path: "{{certdir}}/server-cert.pem"
@@ -93,7 +94,7 @@
     group: ansible
 
 - name: Generate client key
-  connection: local
+  #connection: local
   delegate_to: localhost
   openssl_privatekey:
     size: 4096
@@ -103,7 +104,7 @@
     group: ansible
 
 - name: Generate client csr
-  connection: local
+  #connection: local
   delegate_to: localhost
   openssl_csr:
     privatekey_path: "{{certdir}}/key.pem"
@@ -116,7 +117,7 @@
     group: ansible
 
 - name: Sign client csr with CA key
-  connection: local
+  #connection: local
   delegate_to: localhost
   openssl_certificate:
     path: "{{certdir}}/cert.pem"
