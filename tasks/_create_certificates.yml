@@ -81,7 +81,7 @@
     group: ansible
 
 - name: Generate server csr
-  openssl_csr:
+  community.crypto.openssl_csr:
     privatekey_path: "{{certdir}}/server-key.pem"
     digest: sha256
     path: "{{certdir}}/server.csr"
@@ -125,7 +125,7 @@
 - name: Generate client csr
   connection: local
   delegate_to: localhost
-  openssl_csr:
+  community.crypto.openssl_csr:
     privatekey_path: "{{certdir}}/key.pem"
     path: "{{certdir}}/client.csr"
     extendedKeyUsage: 'clientAuth'
