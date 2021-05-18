@@ -16,7 +16,7 @@
 - name: Generate an OpenSSL public key
   community.crypto.openssl_privatekey:
     cipher: aes256
-    size: 2048
+    size: 4096
     passphrase: "{{passphrase}}"
     path: "{{certdir}}/ca-key.pem"
     mode: 0644
@@ -59,7 +59,7 @@
         group: ansible
 
     - name: Generate certificate
-      openssl_certificate:
+      community.crypto.x509_certificate:
         provider: selfsigned
         path: "{{certdir}}/ca.pem"
         privatekey_path: "{{certdir}}/ca-key.pem"
@@ -70,7 +70,7 @@
         group: ansible
 
 - name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
+  community.crypto.x509_certificate:
     path: "{{certdir}}/server-cert.pem"
     ownca_privatekey_path: "{{certdir}}/ca-key.pem"
     csr_path: "{{certdir}}/server.csr"
@@ -99,7 +99,7 @@
     group: ansible
 
 - name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
+  community.crypto.x509_certificate:
     path: "{{certdir}}/cert.pem"
     ownca_privatekey_path: "{{certdir}}/ca-key.pem"
     csr_path: "{{certdir}}/client.csr"

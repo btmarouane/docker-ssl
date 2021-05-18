@@ -2,7 +2,7 @@
 country_name: "MA"
 organization_name: ""
 email_address: ""
-certdir: "/home/ansible/certificates"
+certdir: "/home/ansible/docker/certificates"
 # END - Required parameters
 
 # Port to use for the Docker socket
