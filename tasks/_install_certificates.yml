@@ -10,7 +10,7 @@
     src: "{{ server_certificate }}"
     dest: "{{ certificates_dir }}/server-certificate.pem"
 
-- name: "Copy RootCA to Server (For client verification)"
+- name: "Push RootCA to Server (For client verification)"
   become: yes
   copy:
     src: "{{ rootca_certificate }}"

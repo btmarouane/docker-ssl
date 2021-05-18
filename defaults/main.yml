@@ -4,7 +4,7 @@ organization_name: ""
 locality: ""
 state_name: ""
 certdir: "/home/ansible/docker/certificates"
-passphrase_file: "{{certdir}}/temp/passphrase"
+passphrase_file: "{{certdir}}/temp/passphrase.txt"
 # END - Required parameters
 
 # Port to use for the Docker socket
