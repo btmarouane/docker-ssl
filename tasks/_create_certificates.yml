@@ -34,19 +34,6 @@
     group: ansible
     state: directory
 
-
-- name: Generate CA private key
-  connection: local
-  delegate_to: localhost
-  openssl_privatekey:
-    passphrase: "{{passphrase}}"
-    cipher: aes256
-    size: 4096
-    path: "{{certdir}}/ca-key.pem"
-    mode: 0400
-    owner: ansible
-    group: ansible
-
 - name: Create passphrase file
   delegate_to: "{{item}}"
   with_items:
@@ -55,6 +42,19 @@
   lineinfile:
     dest: "{{passphrase_file}}"
     line: "{{passphrase}}"
+
+- name: Generate CA private key
+  connection: local
+  delegate_to: localhost
+  openssl_privatekey:
+    select_crypto_backend: pyopenssl
+    passphrase: "{{passphrase}}"
+    cipher: aes256
+    size: 4096
+    path: "{{certdir}}/ca-key.pem"
+    mode: 0400
+    owner: ansible
+    group: ansible
 
 - name: Generate CA
   connection: local
@@ -75,6 +75,7 @@
 
 - name: Generate server private key
   openssl_privatekey:
+    select_crypto_backend: pyopenssl
     size: 4096
     path: "{{certdir}}/server-key.pem"
     mode: 0400
@@ -117,6 +118,7 @@
   connection: local
   delegate_to: localhost
   openssl_privatekey:
+    select_crypto_backend: pyopenssl
     size: 4096
     path: "{{certdir}}/key.pem"
     mode: 0400
