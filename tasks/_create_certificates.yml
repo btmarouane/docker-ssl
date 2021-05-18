@@ -39,9 +39,9 @@
   with_items:
     - localhost
     - production
-  lineinfile:
+  copy:
     dest: "{{passphrase_file}}"
-    line: "{{passphrase}}"
+    content: "{{passphrase}}"
 
 - name: Generate CA private key
   connection: local
