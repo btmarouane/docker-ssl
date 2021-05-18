@@ -1,6 +1,6 @@
-- name: Install requirements
+- name: "install requirements"
   vars:
-    - ansible_python_interpreter: /usr/bin/python2
+  - ansible_python_interpreter: /usr/bin/python2
   tasks:
   - name: Install {{item}}
     package:
