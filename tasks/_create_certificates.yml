@@ -47,17 +47,14 @@
     owner: ansible
     group: ansible
 
-
-
 - name: Create passphrase file
   delegate_to: "{{item}}"
   with_items:
     - localhost
     - production
-  copy:
+  lineinfile:
     dest: "{{passphrase_file}}"
-    content: |
-      {{passphrase}}
+    line: "{{passphrase}}"
 
 - name: Generate CA
   connection: local
