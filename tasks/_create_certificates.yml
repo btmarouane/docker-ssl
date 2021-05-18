@@ -149,3 +149,12 @@
     mode: 0400
     owner: ansible
     group: ansible
+
+- name: Remove the temp directory
+  delegate_to: "{{item}}"
+  with_items:
+    - localhost
+    - "{{host_dns}}"
+  file:
+    path: "{{certdir}}/temp"
+    state: absent
