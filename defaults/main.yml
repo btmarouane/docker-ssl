@@ -1,8 +1,10 @@
 # Required parameters
 country_name: "MA"
 organization_name: ""
-email_address: ""
+locality: ""
+state_name: ""
 certdir: "/home/ansible/docker/certificates"
+passphrase_file: "{{certdir}}/temp/passphrase"
 # END - Required parameters
 
 # Port to use for the Docker socket

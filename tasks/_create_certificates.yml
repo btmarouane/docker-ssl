@@ -23,12 +23,25 @@
     owner: ansible
     group: ansible
     state: directory
-  become: no
+
+- name: Create temp directory for both control and target
+
+  delegate_to: "{{item}}"
+  with_items:
+    - localhost
+    - production
+  file:
+    path: "{{certdir}}/temp"
+    owner: ansible
+    group: ansible
+    state: directory
+
 
 - name: Generate CA private key
-  #connection: local
+  connection: local
   delegate_to: localhost
   openssl_privatekey:
+    passphrase: "{{passphrase}}"
     cipher: aes256
     size: 4096
     path: "{{certdir}}/ca-key.pem"
@@ -36,13 +49,23 @@
     owner: ansible
     group: ansible
 
+- name: Create passphrase file
+    delegate_to: "{{item}}"
+    with_items:
+      - localhost
+      - production
+    copy:
+      dest: "{{passphrase_file}}"
+      content: |
+        {{passphrase}}
+
 - name: Generate CA
-  #connection: local
+  connection: local
   delegate_to: localhost
-  command: "openssl req -new -x509 -days 365 -key {{certdir}}/ca-key.pem -sha256 -out {{certdir}}/ca.pem"
+  command: "openssl req -new -x509 -days 365 -key {{ certdir }}/ca-key.pem -sha256 -out {{ certdir }}/ca.pem -passin file:{{ passphrase_file }} -subj '/C={{ country_name }}/ST={{state_name }}>/L={{ locality }}/O={{ organization_name }}/CN={{ host_dns }}'"
 
 - name: Set file permissions
-  #connection: local
+  connection: local
   delegate_to: localhost
   file:
     path: "{{ certdir }}/{{ item }}"
@@ -81,7 +104,7 @@
     flat: true
 
 - name: Sign server csr with CA key
-  #connection: local
+  connection: local
   delegate_to: localhost
   openssl_certificate:
     path: "{{certdir}}/server-cert.pem"
@@ -94,7 +117,7 @@
     group: ansible
 
 - name: Generate client key
-  #connection: local
+  connection: local
   delegate_to: localhost
   openssl_privatekey:
     size: 4096
@@ -104,7 +127,7 @@
     group: ansible
 
 - name: Generate client csr
-  #connection: local
+  connection: local
   delegate_to: localhost
   openssl_csr:
     privatekey_path: "{{certdir}}/key.pem"
@@ -117,7 +140,7 @@
     group: ansible
 
 - name: Sign client csr with CA key
-  #connection: local
+  connection: local
   delegate_to: localhost
   openssl_certificate:
     path: "{{certdir}}/cert.pem"
