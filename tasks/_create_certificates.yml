@@ -2,8 +2,8 @@
   assert:
     that:
       - passphrase is defined
-    fail_msg: "{{passphrase}} needs to be set for the role to work "
-    success_msg: "Required variable {{passphrase}} is defined"
+    fail_msg: "passphrase needs to be set for the role to work "
+    success_msg: "Required variable passphrase is defined"
 
 - name: "Create General Certificates directory for Docker"
   file:
@@ -22,7 +22,7 @@
     mode: 0644
     owner: ansible
     group: ansible
- 
+
 - name: Generate an OpenSSL server key
   community.crypto.openssl_privatekey:
     size: 4096
@@ -36,10 +36,10 @@
     privatekey_path: "{{certdir}}/server-key.pem"
     digest: sha256
     path: "{{certdir}}/server.csr"
-    subject_alt_name: "DNS:ansible1,IP:{{d_host}},IP:127.0.0.1"
+    subject_alt_name: "DNS:production,IP:{{d_host}},IP:127.0.0.1"
     extendedKeyUsage: 'serverAuth'
     subject:
-      CN: ansible1
+      CN: production
     mode: 0644
     owner: ansible
     group: ansible
