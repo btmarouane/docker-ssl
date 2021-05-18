@@ -9,7 +9,7 @@ certdir: "/home/ansible/docker/certificates"
 docker_port: 2376
 
 # Where to store certificates on the remote machine
-certificates_dir: "/docker-ssl"
+certificates_dir: "/etc/docker"
 
 rootca_certificate: "{{certdir}}/ca.pem"
 server_certificate: "{{certdir}}/server-cert.pem"

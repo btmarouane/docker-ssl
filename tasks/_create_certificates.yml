@@ -1,38 +1,53 @@
-- name: 'Check passphrase presence'
-  assert:
-    that:
-      - passphrase is defined
-    fail_msg: "passphrase needs to be set for the role to work "
-    success_msg: "Required variable passphrase is defined"
-
-- name: "Create General Certificates directory for Docker"
+- name: Create General Certificates directory for both control and target
+  delegate_to: "{{item}}"
+  with_items:
+    - localhost
+    - production
   file:
     path: "{{certdir}}"
     owner: ansible
     group: ansible
     state: directory
   become: yes
-  
-- name: Generate an OpenSSL public key
-  community.crypto.openssl_privatekey:
+
+- name: Generate CA private key
+  connection: local
+  delegate_to: localhost
+  openssl_privatekey:
     cipher: aes256
     size: 4096
-    passphrase: "{{passphrase}}"
     path: "{{certdir}}/ca-key.pem"
-    mode: 0644
+    mode: 0400
     owner: ansible
     group: ansible
 
-- name: Generate an OpenSSL server key
-  community.crypto.openssl_privatekey:
+- name: Generate CA
+  connection: local
+  delegate_to: localhost
+  command: "openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out {{certdir}}/ca.pem"
+
+- name: Set file permissions
+  connection: local
+  delegate_to: localhost
+  file:
+    path: "{{ certdir }}/{{ item }}"
+    mode: 0444
+    owner: ansible
+    group: ansible
+  with_items:
+    - ca.pem
+    - ca-key.pem
+
+- name: Generate server private key
+  openssl_privatekey:
     size: 4096
     path: "{{certdir}}/server-key.pem"
-    mode: 0644  
+    mode: 0400
     owner: ansible
     group: ansible
 
-- name: Generate an OpenSSL Certificate Signing Request
-  community.crypto.openssl_csr:
+- name: Generate server csr
+  openssl_csr:
     privatekey_path: "{{certdir}}/server-key.pem"
     digest: sha256
     path: "{{certdir}}/server.csr"
@@ -40,72 +55,61 @@
     extendedKeyUsage: 'serverAuth'
     subject:
       CN: production
-    mode: 0644
+    mode: 0400
     owner: ansible
     group: ansible
 
-- name: Re-Generate an OpenSSL Certificate
-  block:
-    - name: Generate csr for certificate
-      community.crypto.openssl_csr:
-        path: "{{certdir}}/ca-csr.csr"
-        privatekey_path: "{{certdir}}/ca-key.pem"
-        privatekey_passphrase: "{{passphrase}}"
-        country_name: "{{country_name}}"
-        organization_name: "{{organization_name}}"
-        email_address: "{{email_address}}"
-        mode: 0644
-        owner: ansible
-        group: ansible
+- name: Pull server csr
+  fetch:
+    src: "{{certdir}}/server.csr"
+    dest: "{{certdir}}/server.csr"
+    flat: true
 
-    - name: Generate certificate
-      community.crypto.x509_certificate:
-        provider: selfsigned
-        path: "{{certdir}}/ca.pem"
-        privatekey_path: "{{certdir}}/ca-key.pem"
-        privatekey_passphrase: "{{passphrase}}"
-        csr_path: "{{certdir}}/ca-csr.csr"
-        mode: 0644
-        owner: ansible
-        group: ansible
-
-- name: Generate a Self Signed OpenSSL certificate
-  community.crypto.x509_certificate:
+- name: Sign server csr with CA key
+  connection: local
+  delegate_to: localhost
+  openssl_certificate:
     path: "{{certdir}}/server-cert.pem"
     ownca_privatekey_path: "{{certdir}}/ca-key.pem"
     csr_path: "{{certdir}}/server.csr"
     ownca_path: "{{certdir}}/ca.pem"
     provider: ownca
-    ownca_privatekey_passphrase: "{{passphrase}}"
-    mode: 0644
+    mode: 0400
     owner: ansible
     group: ansible
 
-- name: Generate an OpenSSL client key
-  community.crypto.openssl_privatekey:
+- name: Generate client key
+  connection: local
+  delegate_to: localhost
+  openssl_privatekey:
     size: 4096
     path: "{{certdir}}/key.pem"
-    mode: 0644
+    mode: 0400
     owner: ansible
     group: ansible
 
-- name: Generate an OpenSSL Certificate Signing Request
-  community.crypto.openssl_csr:
+- name: Generate client csr
+  connection: local
+  delegate_to: localhost
+  openssl_csr:
     privatekey_path: "{{certdir}}/key.pem"
     path: "{{certdir}}/client.csr"
     extendedKeyUsage: 'clientAuth'
-    mode: 0644
+    subject:
+      CN: client
+    mode: 0400
     owner: ansible
     group: ansible
 
-- name: Generate a Self Signed OpenSSL certificate
-  community.crypto.x509_certificate:
+- name: Sign client csr with CA key
+  connection: local
+  delegate_to: localhost
+  openssl_certificate:
     path: "{{certdir}}/cert.pem"
     ownca_privatekey_path: "{{certdir}}/ca-key.pem"
     csr_path: "{{certdir}}/client.csr"
     ownca_path: "{{certdir}}/ca.pem"
     provider: ownca
-    ownca_privatekey_passphrase: "{{passphrase}}"
-    mode: 0644
+    mode: 0400
     owner: ansible
     group: ansible
