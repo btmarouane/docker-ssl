@@ -4,10 +4,11 @@
     state: directory
   become: yes
 
-- name: "Push Key to Server"
+- name: "Move Server Key"
   become: yes
+  remote_src: yes
   copy:
-    src: "{{ server_certificate }}"
+    src: "{{ server_privatekey }}"
     dest: "{{ certificates_dir }}/server-privatekey.pem"
 
 - name: "Push Certificate to Server"
