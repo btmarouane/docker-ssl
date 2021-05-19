@@ -5,6 +5,8 @@ locality: ""
 state_name: ""
 certdir: "/home/ansible/docker/certificates"
 passphrase_file: "{{certdir}}/temp/passphrase.txt"
+export_docker_variables: "export DOCKER_HOST=tcp://{{host_dns}}:{{docker_port}} DOCKER_TLS_VERIFY=1"
+docker_tls_env_file: "/etc/profile.d/docker_tls.sh"
 # END - Required parameters
 
 # Port to use for the Docker socket
