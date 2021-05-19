@@ -6,8 +6,8 @@
 
 - name: "Move Server Key"
   become: yes
-  remote_src: yes
   copy:
+    remote_src: yes
     src: "{{ server_privatekey }}"
     dest: "{{ certificates_dir }}/server-privatekey.pem"
 
