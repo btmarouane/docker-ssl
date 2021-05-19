@@ -42,3 +42,8 @@
     - "{{certdir}}/key.pem"
     - "{{certdir}}/ca.pem"
     - "{{certdir}}/cert.pem"
+
+- name: "Export client environment variables"
+  connection: local
+  delegate_to: localhost
+  shell: export DOCKER_HOST=tcp://{{host_dns}}:{{docker_port}} DOCKER_TLS_VERIFY=1
