@@ -10,8 +10,6 @@
   file:
     path: "{{ client_certificates_dir }}"
     state: directory
-  become: yes
-
 
 - name: "Move Server Key"
   become: yes
