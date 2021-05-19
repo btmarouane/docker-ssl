@@ -4,6 +4,15 @@
     state: directory
   become: yes
 
+- name: "Create Certificates directory for client"
+  connection: local
+  delegate_to: localhost
+  file:
+    path: "{{ client_certificates_dir }}"
+    state: directory
+  become: yes
+
+
 - name: "Move Server Key"
   become: yes
   copy:
