@@ -21,3 +21,15 @@
   copy:
     src: "{{ rootca_certificate }}"
     dest: "{{ certificates_dir }}/rootca-certificate.pem"
+
+- name: "Move client certificates to docker directory"
+  connection: local
+  delegate_to: localhost
+  become: yes
+  copy:
+    src: "{{item}}"
+    dest: "{{ client_certificates_dir }}"
+  with_items:
+    - "{{certdir}}/key.pem"
+    - "{{certdir}}/ca.pem"
+    - "{{certdir}}/cert.pem"

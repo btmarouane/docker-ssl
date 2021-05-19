@@ -1,4 +1,5 @@
 - name: Install {{item}}
+  become: yes
   package:
     name: "{{item}}"
     state: present
@@ -9,6 +10,7 @@
   vars:
     - ansible_python_interpreter: /usr/bin/python2
 - name: Install docker
+  become: yes
   block:
     - name: Install yum-utils
       package:

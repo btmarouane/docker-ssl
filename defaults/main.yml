@@ -13,6 +13,9 @@ docker_port: 2376
 # Where to store certificates on the remote machine
 certificates_dir: "/etc/docker"
 
+# Where to store certificates on the remote machine
+client_certificates_dir: "~/.docker"
+
 rootca_certificate: "{{certdir}}/ca.pem"
 server_certificate: "{{certdir}}/server-cert.pem"
 server_privatekey:  "{{certdir}}/server-key.pem"
