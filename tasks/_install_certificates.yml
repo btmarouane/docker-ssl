@@ -44,4 +44,4 @@
 - name: "Export client environment variables"
   connection: local
   delegate_to: localhost
-  commands: export DOCKER_HOST=tcp://{{host_dns}}:{{docker_port}} DOCKER_TLS_VERIFY=1
+  command: export DOCKER_HOST=tcp://{{host_dns}}:{{docker_port}} DOCKER_TLS_VERIFY=1
