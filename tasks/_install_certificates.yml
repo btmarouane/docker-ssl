@@ -25,7 +25,6 @@
 - name: "Move client certificates to docker directory"
   connection: local
   delegate_to: localhost
-  become: yes
   copy:
     src: "{{item}}"
     dest: "{{ client_certificates_dir }}"
