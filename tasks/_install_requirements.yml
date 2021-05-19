@@ -36,3 +36,10 @@
             state: present
   vars:
     - ansible_python_interpreter: /usr/bin/python2
+
+- name: Start docker
+  systemd:
+    name: docker
+    state: started
+    daemon_reload: yes
+  become: yes
