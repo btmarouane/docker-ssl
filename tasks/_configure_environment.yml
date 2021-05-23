@@ -1,0 +1,7 @@
+- name: Create Docker global environment variables file and export variables
+  delegate_to: localhost
+  connection: local
+  become: yes
+  copy:
+    dest: "{{docker_tls_env_file}}"
+    content: "{{export_docker_variables}}"

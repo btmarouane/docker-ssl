@@ -4,23 +4,39 @@
     state: directory
   become: yes
 
-- name: "Copy Private Key to Server"
+- name: "Create Certificates directory for client"
+  connection: local
+  delegate_to: localhost
+  file:
+    path: "{{ client_certificates_dir }}"
+    state: directory
+
+- name: "Move Server Key"
+  become: yes
   copy:
-    remote_src: true
+    remote_src: yes
     src: "{{ server_privatekey }}"
     dest: "{{ certificates_dir }}/server-privatekey.pem"
-  become: yes
 
-- name: "Copy Certificate to Server"
+- name: "Push Certificate to Server"
+  become: yes
   copy:
-    remote_src: true
     src: "{{ server_certificate }}"
     dest: "{{ certificates_dir }}/server-certificate.pem"
-  become: yes
 
-- name: "Copy RootCA to Server (For client verification)"
+- name: "Push RootCA to Server (For client verification)"
+  become: yes
   copy:
-    remote_src: true
     src: "{{ rootca_certificate }}"
     dest: "{{ certificates_dir }}/rootca-certificate.pem"
-  become: yes
+
+- name: "Move client certificates to docker directory"
+  connection: local
+  delegate_to: localhost
+  copy:
+    src: "{{item}}"
+    dest: "{{ client_certificates_dir }}"
+  with_items:
+    - "{{certdir}}/key.pem"
+    - "{{certdir}}/ca.pem"
+    - "{{certdir}}/cert.pem"

@@ -1,14 +1,14 @@
-#- name: "Install requirements"
-#  include_tasks: _install_requirements.yml
-
-#- name: "Install Docker"
-#  include_tasks: _install_docker.yml
+- name: "Install requirements"
+  include_tasks: _install_requirements.yml
 
 - name: "Create certificates"
   include_tasks: _create_certificates.yml
 
 - name: "Install Certificates"
   include_tasks: _install_certificates.yml
+
+- name: "Configure client environment variables"
+  include_tasks: _configure_environment.yml
 
 - name: "Setup Docker daemon Service"
   include_tasks: _setup_docker_service.yml
